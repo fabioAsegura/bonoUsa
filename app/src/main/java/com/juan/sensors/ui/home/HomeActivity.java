@@ -1,7 +1,7 @@
 package com.juan.sensors.ui.home;
 
+
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -174,33 +175,47 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        Fragment fragment = null;
 
-        switch (id) {
+        Class fragmentClass;
+
+        switch (item.getItemId()) {
             case R.id.nav_dash:
                 Snackbar.make(navigationView, "See Dashboard (buttons with actions)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                setTitle("Dash");
+                fragmentClass=FirstFragment.class;
                 break;
             case R.id.nav_db:
                 Snackbar.make(navigationView, "See Database (Tables)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                setTitle("DB");
+                fragmentClass=SecondFragment.class;
                 break;
             case R.id.nav_graph:
                 Snackbar.make(navigationView, "See Graphs", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                setTitle("Graph");
+                fragmentClass=ThirdFragment.class;
                 break;
             case R.id.nav_about:
                 Snackbar.make(navigationView, "See other details", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                setTitle("About");
+                fragmentClass=FourthFragment.class;
                 break;
             default:
                 Snackbar.make(navigationView, "Default", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                setTitle("About");
+                fragmentClass=DefaultFragment.class;
                 break;
 
         }
 
-        drawer.closeDrawer(GravityCompat.START);
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        item.setChecked(true);
+        setTitle(item.getTitle());
+        drawer.closeDrawers();
         return true;
     }
 
