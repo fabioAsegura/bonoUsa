@@ -9,10 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 
 import com.juan.sensors.R;
@@ -27,7 +23,7 @@ public class Tables extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 
-        return inflater.inflate(R.layout.tables, container, false);
+        return inflater.inflate(R.layout.table_layout, container, false);
     }
 
     @Override
