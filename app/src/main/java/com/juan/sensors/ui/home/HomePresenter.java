@@ -86,8 +86,8 @@ class HomePresenter implements HomeContract.Presenter {
                     //Show view list of sensors
                     view.listSensors();
 
-                    //TODO: Uncomment to test
-                    view.makeTable(getHashmapData(sensors));
+                    //TODO: This enables table generation but doesn't work
+                    //view.makeTable(getHashmapData(sensors));
                     view.plotGraph(getHashmapData(sensors));
 
                 }, throwable -> {

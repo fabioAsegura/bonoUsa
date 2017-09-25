@@ -206,7 +206,7 @@ public class HomeActivity extends BaseActivity implements
             case R.id.nav_dash:
                 fragment = new Dashboard();
                 break;
-            case R.id.nav_db:
+            case R.id.nav_tables:
                 fragment = new Tables();
                 break;
             case R.id.nav_graph:

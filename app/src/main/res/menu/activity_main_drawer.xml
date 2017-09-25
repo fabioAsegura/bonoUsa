@@ -10,9 +10,9 @@
             android:title="Dashboard"
             android:checked="true"/>
         <item
-            android:id="@+id/nav_db"
+            android:id="@+id/nav_tables"
             android:icon="@drawable/ic_menu_db"
-            android:title="Database" />
+            android:title="Tables" />
         <item
             android:id="@+id/nav_graph"
             android:icon="@drawable/ic_menu_graph"

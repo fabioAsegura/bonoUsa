@@ -23,7 +23,7 @@ public class Tables extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 
-        return inflater.inflate(R.layout.table_layout, container, false);
+        return inflater.inflate(R.layout.tables, container, false);
     }
 
     @Override
