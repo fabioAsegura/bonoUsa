@@ -13,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -28,6 +31,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.juan.sensors.R;
 import com.juan.sensors.model.SensorData;
 import com.juan.sensors.ui.base.BaseActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,8 +57,8 @@ public class HomeActivity extends BaseActivity implements
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    @BindView(R.id.graph)
-    GraphView graphView;
+    // @BindView(R.id.graph)
+    //GraphView graphView;
 
     //@BindView(R.id.graph2)
     //GraphView graphView2;
@@ -69,6 +74,8 @@ public class HomeActivity extends BaseActivity implements
 
     private float lightValue;
 
+    private String activePage = "Dashboard";
+
     @Override
     protected int getContentResourceId() {
         return R.layout.activity_main;
@@ -78,6 +85,7 @@ public class HomeActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidInjection.inject(this);
+
 
         setSupportActionBar(toolbar);
         setTitle("Dashboard");
@@ -90,6 +98,12 @@ public class HomeActivity extends BaseActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         colors = getResources().getStringArray(R.array.random_colors);
+
+        displaySelectedScreen(R.id.nav_dash);
+
+        presenter.takeView(this);
+
+
     }
 
 
@@ -98,18 +112,10 @@ public class HomeActivity extends BaseActivity implements
         super.onResume();
         presenter.takeView(this);
 
-
         if (sensorManager == null) {
             return;
         }
 
-        // Commented to test only one sensor
-        //List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-        /*
-        for (Sensor sensor : sensors) {
-            sensorManager.registerListener(this, sensor, 1000000);
-        }
-        */
 
         Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorManager.registerListener(this, lightSensor, 1000000);
@@ -124,6 +130,14 @@ public class HomeActivity extends BaseActivity implements
             }
         }, delay);
 
+
+        // Commented to test only one sensor
+        //List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        /*
+        for (Sensor sensor : sensors) {
+            sensorManager.registerListener(this, sensor, 1000000);
+        }
+        */
     }
 
 
@@ -174,50 +188,44 @@ public class HomeActivity extends BaseActivity implements
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
 
-        Class fragmentClass;
-
-        switch (item.getItemId()) {
-            case R.id.nav_dash:
-                Snackbar.make(navigationView, "See Dashboard (buttons with actions)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fragmentClass=FirstFragment.class;
-                break;
-            case R.id.nav_db:
-                Snackbar.make(navigationView, "See Database (Tables)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fragmentClass=SecondFragment.class;
-                break;
-            case R.id.nav_graph:
-                Snackbar.make(navigationView, "See Graphs", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fragmentClass=ThirdFragment.class;
-                break;
-            case R.id.nav_about:
-                Snackbar.make(navigationView, "See other details", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fragmentClass=FourthFragment.class;
-                break;
-            default:
-                Snackbar.make(navigationView, "Default", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fragmentClass=DefaultFragment.class;
-                break;
-
-        }
-
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        displaySelectedScreen(item.getItemId());
 
         item.setChecked(true);
-        setTitle(item.getTitle());
+
         drawer.closeDrawers();
         return true;
     }
+
+    private void displaySelectedScreen(int id) {
+        Fragment fragment = null;
+
+        switch (id) {
+            case R.id.nav_dash:
+                fragment = new Dashboard();
+                break;
+            case R.id.nav_db:
+                fragment = new Tables();
+                break;
+            case R.id.nav_graph:
+                fragment = new Graphs();
+                break;
+            case R.id.nav_about:
+                fragment = new About();
+                break;
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+
+    }
+
 
     @Override
     public void listSensors() {
@@ -231,7 +239,9 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void plotGraph(HashMap<String, List<SensorData>> hashMap) {
 
+        GraphView graphView = (GraphView) findViewById(R.id.graph);
         graphView.removeAllSeries();
+        graphView.getLegendRenderer().setVisible(false);
 
         for (String name : hashMap.keySet()) {
             List<SensorData> dataList = hashMap.get(name);
@@ -264,16 +274,14 @@ public class HomeActivity extends BaseActivity implements
         // graphView.getGridLabelRenderer().setVerticalAxisTitle("Intensidad");
         //graphView.getGridLabelRenderer().setHorizontalAxisTitle("Tiempo");
         graphView.getLegendRenderer().setVisible(true);
-        graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-
+        //graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
     }
-
 
 
     @Override
     public void makeTable(HashMap<String, List<SensorData>> hashMap) {
-/*
-        graphView2.removeAllSeries();
+
+        TableLayout tabla = (TableLayout) findViewById(R.id.table_layout);
 
         for (String name : hashMap.keySet()) {
             List<SensorData> dataList = hashMap.get(name);
@@ -281,33 +289,16 @@ public class HomeActivity extends BaseActivity implements
             List<DataPoint> dataPoints = new ArrayList<>();
 
             for (int i = 0; i < dataList.size(); i++) {
-                dataPoints.add(new DataPoint(i + 1, dataList.get(i).getRecording()));
+                dataPoints.add(new DataPoint(dataList.get(i).getDate(), dataList.get(i).getRecording()));
             }
 
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(
-                    dataPoints.toArray(new DataPoint[dataPoints.size()]));
+            TableRow row = (TableRow) findViewById(R.id.row_layout);
 
-            List<String> nameList = new ArrayList<>(hashMap.keySet());
-            int pos = nameList.indexOf(name);
-            if (pos < 0 || pos >= colors.length) {
-                pos = 0;
-            }
-
-            series.setTitle(name);
-            series.setAnimated(true);
-            series.setColor(Color.parseColor(colors[pos]));
-            series.setDrawDataPoints(true);
-
-            graphView2.addSeries(series);
+            tabla.addView(row);
 
         }
 
-        // legend
-        // graphView.getGridLabelRenderer().setVerticalAxisTitle("Intensidad");
-        //graphView.getGridLabelRenderer().setHorizontalAxisTitle("Tiempo");
-        graphView2.getLegendRenderer().setVisible(false);
-        graphView2.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-*/
+
     }
 
     @Override

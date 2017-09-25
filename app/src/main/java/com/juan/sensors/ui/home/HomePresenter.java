@@ -87,9 +87,9 @@ class HomePresenter implements HomeContract.Presenter {
                     view.listSensors();
 
                     //TODO: Uncomment to test
-                    view.plotGraph(getTestMap());
+                    //view.plotGraph(getTestMap());
 
-                    //view.plotGraph(getHashmapData(sensors));
+                    view.plotGraph(getHashmapData(sensors));
 
                 }, throwable -> {
                     Log.e(TAG, throwable.getMessage(), throwable);
