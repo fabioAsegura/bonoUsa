@@ -11,5 +11,5 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="About" />
+        android:text="developed with help of Tinashe Mzondiwa by Juan Palomino and Fabio Segura" />
 </RelativeLayout>

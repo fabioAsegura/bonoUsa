@@ -4,6 +4,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/button_tables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tables" />
+
+    <Button
+        android:id="@+id/button_graph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/button_tables"
+        android:text="Graphs" />
+
+    <Button
+        android:id="@+id/button_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/button_graph"
+        android:text="About" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"

@@ -21,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -131,6 +133,8 @@ public class HomeActivity extends BaseActivity implements
         }, delay);
 
 
+
+
         // Commented to test only one sensor
         //List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
         /*
@@ -205,6 +209,7 @@ public class HomeActivity extends BaseActivity implements
         switch (id) {
             case R.id.nav_dash:
                 fragment = new Dashboard();
+
                 break;
             case R.id.nav_tables:
                 fragment = new Tables();
