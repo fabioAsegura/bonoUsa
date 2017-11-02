@@ -74,7 +74,12 @@ public class HomeActivity extends BaseActivity implements
 
     private String[] colors;
 
-    private float lightValue;
+    double gX = 0;
+    double gY = 0;
+    double gZ = 0;
+    double aX = 0;
+    double aY= 0;
+    double aZ = 0;
 
     private String activePage = "Dashboard";
 
@@ -126,18 +131,11 @@ public class HomeActivity extends BaseActivity implements
         sensorManager.registerListener(this, accelSensor, 1000000);
 
         Handler handler = new Handler();
-        int delay = 1000; //milliseconds
+        int delay = 250; //milliseconds
 
-        double gX = 40.5;
-        double gY = 80.2;
-        double gZ = -20.2;
-        double aX = -20.2;
-        double aY= 80.2;
-        double aZ = 40.5;
-        presenter.sendReadingsToApi(gX, gY, gZ, aX, aY, aZ);
-        handler.postDelayed(new Runnable() {
+
+       handler.postDelayed(new Runnable() {
             public void run() {
-                //gX = gyroSensor.get
                 presenter.sendReadingsToApi(gX, gY, gZ, aX, aY, aZ);
                 handler.postDelayed(this, delay);
             }
@@ -319,9 +317,19 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d(TAG, "SENSOR CHANGED: " + sensorEvent.sensor.getName() + ", " + sensorEvent.values);
+        Log.d(TAG, "SENSOR CHANGED: " + sensorEvent.sensor.getName() + ", " +sensorEvent.sensor.getType()+ ", " +sensorEvent.sensor.getStringType()+","+ sensorEvent.values);
 
-        lightValue = sensorEvent.values[0];
+        if (sensorEvent.sensor.getType() == 4) {
+            gX = sensorEvent.values[0];
+            gY = sensorEvent.values[1];
+            gZ = sensorEvent.values[2];
+        }
+        if (sensorEvent.sensor.getType() == 1) {
+            aX = sensorEvent.values[0];
+            aY = sensorEvent.values[1];
+            aZ = sensorEvent.values[2];
+        }
+
         //presenter.recordSensorData(sensorEvent.sensor.getName(), sensorEvent.values[0]);
 
     }
