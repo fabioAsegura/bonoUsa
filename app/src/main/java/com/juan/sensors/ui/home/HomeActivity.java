@@ -134,7 +134,7 @@ public class HomeActivity extends BaseActivity implements
         double aX = -20.2;
         double aY= 80.2;
         double aZ = 40.5;
-
+        presenter.sendReadingsToApi(gX, gY, gZ, aX, aY, aZ);
         handler.postDelayed(new Runnable() {
             public void run() {
                 //gX = gyroSensor.get

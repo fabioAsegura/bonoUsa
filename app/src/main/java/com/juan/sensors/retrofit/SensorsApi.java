@@ -15,6 +15,6 @@ import retrofit2.http.QueryMap;
 
 public interface SensorsApi {
 
-    @GET("BonoUSA/Add")
+    @GET("BonoUsa/Add")
     Observable<Response<BaseResponse>> sendData(@QueryMap Map<String, Double> dataMap);
 }
