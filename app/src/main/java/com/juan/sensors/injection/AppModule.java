@@ -51,7 +51,7 @@ public class AppModule {
         int timeoutSeconds = 60;
 
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-                .baseUrl("http://127.0.0.1") //Todo: Change baseUrl here to your api base url
+                .baseUrl("http://192.168.0.15:8080") //Todo: Change baseUrl here to your api base url
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()));
 

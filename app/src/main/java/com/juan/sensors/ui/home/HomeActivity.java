@@ -119,15 +119,26 @@ public class HomeActivity extends BaseActivity implements
         }
 
 
-        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        sensorManager.registerListener(this, lightSensor, 1000000);
+        Sensor gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorManager.registerListener(this, gyroSensor, 1000000);
+
+        Sensor accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accelSensor, 1000000);
 
         Handler handler = new Handler();
         int delay = 1000; //milliseconds
 
+        double gX = 40.5;
+        double gY = 80.2;
+        double gZ = -20.2;
+        double aX = -20.2;
+        double aY= 80.2;
+        double aZ = 40.5;
+
         handler.postDelayed(new Runnable() {
             public void run() {
-                presenter.recordSensorData(lightSensor.getName(), lightValue);
+                //gX = gyroSensor.get
+                presenter.sendReadingsToApi(gX, gY, gZ, aX, aY, aZ);
                 handler.postDelayed(this, delay);
             }
         }, delay);
@@ -312,6 +323,7 @@ public class HomeActivity extends BaseActivity implements
 
         lightValue = sensorEvent.values[0];
         //presenter.recordSensorData(sensorEvent.sensor.getName(), sensorEvent.values[0]);
+
     }
 
     @Override

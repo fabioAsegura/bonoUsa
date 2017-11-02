@@ -111,8 +111,8 @@ class HomePresenter implements HomeContract.Presenter {
                     view.listSensors();
 
                     //TODO: Uncomment to test
-                    view.makeTable(getTestMap());
-                    view.plotGraph(getHashmapData(sensors));
+                    // view.makeTable(getTestMap());
+                    //view.plotGraph(getHashmapData(sensors));
 
                 }, throwable -> {
                     Log.e(TAG, throwable.getMessage(), throwable);
@@ -242,14 +242,16 @@ class HomePresenter implements HomeContract.Presenter {
     }
 
     //TODO: This is how you will send your readings to api
-    private void sendReadingsToApi(double gx, double gy, double ax, double ay) {
+    public void sendReadingsToApi(double gx, double gy, double gz, double ax, double ay, double az) {
         HashMap<String, Double> dataMap = new HashMap<>();
 
         //TODO: Add your data here, name & value pairs
-        dataMap.put("gx", gx);
-        dataMap.put("gy", gy);
-        dataMap.put("ax", ax);
-        dataMap.put("ay", ay);
+        dataMap.put("gX", gx);
+        dataMap.put("gY", gy);
+        dataMap.put("gZ", gz);
+        dataMap.put("aX", ax);
+        dataMap.put("aY", ay);
+        dataMap.put("aZ", az);
 
 
         Disposable disposable = sensorsApi.sendData(dataMap)
