@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.juan.sensors.database.SensorsDao;
 import com.juan.sensors.model.SensorData;
+import com.juan.sensors.retrofit.SensorsApi;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +29,7 @@ class HomePresenter implements HomeContract.Presenter {
     private static final String TAG = HomePresenter.class.getName();
 
     private final SensorsDao sensorsDao;
+    private final SensorsApi sensorsApi;
     private HomeContract.View view;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -35,9 +37,10 @@ class HomePresenter implements HomeContract.Presenter {
     private long lastLog;
 
     @Inject
-    HomePresenter(SensorsDao sensorsDao) {
+    HomePresenter(SensorsDao sensorsDao, SensorsApi sensorsApi) {
 
         this.sensorsDao = sensorsDao;
+        this.sensorsApi = sensorsApi;
 
 
         Disposable disposable = Completable.fromAction(() -> sensorsDao.wipeTable())
@@ -236,5 +239,35 @@ class HomePresenter implements HomeContract.Presenter {
                 });
 
         compositeDisposable.add(disposable);
+    }
+
+    //TODO: This is how you will send your readings to api
+    private void sendReadingsToApi(double gx, double gy, double ax, double ay) {
+        HashMap<String, Double> dataMap = new HashMap<>();
+
+        //TODO: Add your data here, name & value pairs
+        dataMap.put("gx", gx);
+        dataMap.put("gy", gy);
+        dataMap.put("ax", ax);
+        dataMap.put("ay", ay);
+
+
+        Disposable disposable = sensorsApi.sendData(dataMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+
+                    if (response.isSuccessful()) {
+                        //Request success
+                    } else {
+                        //Request failed
+                    }
+
+                }, throwable -> {
+                    Log.e(TAG, throwable.getMessage(), throwable);
+                });
+
+        compositeDisposable.add(disposable);
+
     }
 }

@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -27,11 +27,13 @@ task clean(type: Delete) {
 }
 
 ext.versions = [
-        'support_library': '26.1.0',
-        'arch_comp'      : '1.0.0-alpha9-1',
+        'support_library': '27.0.0',
+        'arch_comp'      : '1.0.0-rc1',
         'espresso'       : '3.0.0',
-        'dagger'         : '2.11',
+        'dagger'         : '2.12',
         'rx_java'        : '2.1.0',
         'rx_android'     : '2.0.1',
-        'butterknife'    : '8.8.0'
+        'butterknife'    : '8.8.1',
+        'retrofit'       : '2.3.0',
+        'okhttp3'        : '3.8.1'
 ]
